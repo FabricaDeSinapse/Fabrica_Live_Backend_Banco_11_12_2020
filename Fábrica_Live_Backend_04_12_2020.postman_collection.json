@@ -1,0 +1,73 @@
+{
+	"info": {
+		"_postman_id": "956a0d23-aea7-4f45-8a5b-8fbbd1797db0",
+		"name": "Fábrica_Live_Backend_04_12_2020",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Ler todas as mensagens",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{API_URL}}/mensagens"
+			},
+			"response": []
+		},
+		{
+			"name": "Ler mensagem pelo ID",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{API_URL}}/mensagens/2"
+			},
+			"response": []
+		},
+		{
+			"name": "Criar mensagem",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mensagem\": \"TesteRepetido\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{API_URL}}/mensagens"
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar mensagem pelo ID",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"mensagem\": \"Mensagem atualizada 3\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{API_URL}}/mensagens/3"
+			},
+			"response": []
+		},
+		{
+			"name": "Remover mensagem pelo ID",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": "{{API_URL}}/mensagens/2"
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
