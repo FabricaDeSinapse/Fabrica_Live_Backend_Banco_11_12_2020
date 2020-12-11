@@ -1,5 +1,18 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mongodb = require('mongodb');
+
+(async () => {
+
+const connectionString = 'mongodb://localhost:27017/live_fabrica';
+
+console.info('Conectando ao banco de dados MongoDB...');
+
+const options = {
+    useUnifiedTopology: true
+};
+
+const client = await mongodb.MongoClient.connect(connectionString, options);
 
 const app = express();
 
@@ -22,24 +35,16 @@ CRUD: Criar, Ler (Individual e Tudo), Atualizar e Remover
 - [DELETE] /mensagens/{id} - Remover uma mensagem pelo ID
 */
 
-const mensagens = [
-    {
-        "id": 1,
-        "texto": "Essa é a primeira mensagem",
-    },
-    {
-        "id": 2,
-        "texto": "Essa é a segunda mensagem",
-    },
-];
+const db = client.db('live_fabrica');
+const mensagens = db.collection('mensagens');
 
-const getMensagensValidas = () => mensagens.filter(Boolean);
+const getMensagensValidas = () => mensagens.find({}).toArray();
 
 const getMensagemById = id => getMensagensValidas().find(msg => msg.id === id);
 
 // - [GET] /mensagens - Retorna a lista de mensagens
-app.get('/mensagens', (req, res) => {
-    res.send(getMensagensValidas());
+app.get('/mensagens', async (req, res) => {
+    res.send(await getMensagensValidas());
 });
 
 // - [GET] /mensagens/{id} - Retorna apenas uma única mensagem pelo ID
@@ -114,3 +119,5 @@ app.delete('/mensagens/:id', (req, res) => {
 app.listen(port, () => {
     console.info(`App rodando em http://localhost:${port}`);
 });
+
+})();
