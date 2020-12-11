@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongodb = require('mongodb');
+const ObjectId = mongodb.ObjectId;
 
 (async () => {
 
@@ -40,7 +41,7 @@ const mensagens = db.collection('mensagens');
 
 const getMensagensValidas = () => mensagens.find({}).toArray();
 
-const getMensagemById = id => getMensagensValidas().find(msg => msg.id === id);
+const getMensagemById = async id => mensagens.findOne({ _id: ObjectId(id) });
 
 // - [GET] /mensagens - Retorna a lista de mensagens
 app.get('/mensagens', async (req, res) => {
@@ -48,10 +49,10 @@ app.get('/mensagens', async (req, res) => {
 });
 
 // - [GET] /mensagens/{id} - Retorna apenas uma única mensagem pelo ID
-app.get('/mensagens/:id', (req, res) => {
-    const id = +req.params.id;
+app.get('/mensagens/:id', async (req, res) => {
+    const id = req.params.id;
 
-    const mensagem = getMensagemById(id);
+    const mensagem = await getMensagemById(id);
 
     if (!mensagem) {
         res.send('Mensagem não encontrada.');
