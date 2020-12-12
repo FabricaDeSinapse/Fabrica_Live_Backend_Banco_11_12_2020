@@ -5,7 +5,8 @@ const ObjectId = mongodb.ObjectId;
 
 (async () => {
 
-const connectionString = 'mongodb://localhost:27017/live_fabrica';
+// const connectionString = 'mongodb://localhost:27017/live_fabrica';
+const connectionString = 'mongodb+srv://admin:keCmdEGOurJl5YXz@cluster0.o2szb.mongodb.net/live_fabrica?retryWrites=true&w=majority';
 
 console.info('Conectando ao banco de dados MongoDB...');
 
