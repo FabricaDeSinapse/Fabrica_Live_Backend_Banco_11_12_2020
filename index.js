@@ -87,39 +87,64 @@ app.post('/mensagens', async (req, res) => {
 });
 
 // - [PUT] /mensagens/{id} - Atualiza uma mensagem pelo ID
-app.put('/mensagens/:id', (req, res) => {
-    const id = +req.params.id;
+app.put('/mensagens/:id', async (req, res) => {
+    const id = req.params.id;
 
-    const mensagem = getMensagemById(id);
+    const novaMensagem = req.body;
 
-    const novoTexto = req.body.texto;
-
-    if (!novoTexto) {
+    if (!novaMensagem
+        || !novaMensagem.texto
+        || !novaMensagem.usuario) {
         res.send('Mensagem inválida.');
 
         return;
     }
 
-    mensagem.texto = novoTexto;
+    const quantidade_mensagens = await mensagens.countDocuments({ _id: ObjectId(id) });
 
-    res.send(mensagem);
-});
-
-// - [DELETE] /mensagens/{id} - Remover uma mensagem pelo ID
-app.delete('/mensagens/:id', (req, res) => {
-    const id = +req.params.id;
-
-    const mensagem = getMensagemById(id);
-
-    if (!mensagem) {
+    if (quantidade_mensagens !== 1) {
         res.send('Mensagem não encontrada.');
 
         return;
     }
 
-    const index = mensagens.indexOf(mensagem);
+    const { result } = await mensagens.updateOne(
+        {
+            _id: ObjectId(id)
+        },
+        {
+            $set: novaMensagem
+        }
+    );
+
+    if (result.ok !== 1) {
+        res.send('Ocorreu um erro ao atualizar a mensagem.');
+
+        return;
+    }
+
+    res.send(await getMensagemById(id));
+});
+
+// - [DELETE] /mensagens/{id} - Remover uma mensagem pelo ID
+app.delete('/mensagens/:id', async (req, res) => {
+    const id = req.params.id;
+
+    const quantidade_mensagens = await mensagens.countDocuments({ _id: ObjectId(id) });
+
+    if (quantidade_mensagens !== 1) {
+        res.send('Mensagem não encontrada.');
+
+        return;
+    }
     
-    delete mensagens[index];
+    const { deletedCount } = await mensagens.deleteOne({ _id: ObjectId(id) });
+
+    if (deletedCount !== 1) {
+        res.send('Ocorreu um erro ao remover a mensagem.');
+
+        return;
+    }
 
     res.send('Mensagem removida com sucesso.');
 });
